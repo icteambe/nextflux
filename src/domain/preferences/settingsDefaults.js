@@ -13,6 +13,7 @@ export const settingsDefaults = {
   showHiddenFeeds: false,
   markAsReadOnScroll: false,
   useThirdPartyMediaPlayer: false,
+  listLayout: "feedly", // cards, feedly (compact rows, article opens inline)
   cardImageSize: "large", // none, small, large
   showFavicon: true,
   titleLines: 2,

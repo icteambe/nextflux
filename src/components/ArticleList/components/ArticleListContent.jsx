@@ -19,10 +19,11 @@ import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils.js";
 import { useReducedMotion } from "@/hooks/useReducedMotion.js";
 import { ScrollArea } from "@/components/ui/scroll-area.jsx";
-const ArticleItem = memo(({ article, isLast }) => (
-  <div className="mx-auto w-full max-w-[560px] px-2">
+import { settingsState } from "@/stores/settingsStore.js";
+const ArticleItem = memo(({ article, isLast, compact }) => (
+  <div className={cn("mx-auto w-full px-2", !compact && "max-w-[560px]")}>
     <ArticleCard article={article} />
-    {!isLast && <div className="h-4" />}
+    {!isLast && !compact && <div className="h-4" />}
   </div>
 ));
 ArticleItem.displayName = "ArticleItem";
@@ -71,6 +72,8 @@ export default function ArticleListContent({
   const $hasMore = useStore(hasMore);
   const $loading = useStore(loading);
   const $loadingMore = useStore(loadingMore);
+  const { listLayout } = useStore(settingsState);
+  const compact = listLayout === "feedly";
   const reduceMotion = useReducedMotion();
   const [scrollViewport, setScrollViewport] = useState(null);
   useEffect(() => {
@@ -134,6 +137,7 @@ export default function ArticleListContent({
                   key={article.id}
                   article={article}
                   isLast={index === articles.length - 1}
+                  compact={compact}
                 />
               )}
             />

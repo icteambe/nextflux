@@ -18,6 +18,7 @@ import {
   MonitorCog,
   WrapText,
   LetterText,
+  Rows3,
 } from "lucide-react";
 import Theme from "./components/Theme";
 import { useTranslation } from "react-i18next";
@@ -33,6 +34,7 @@ export default function Appearance() {
     interfaceFontSize,
     textPreviewLines,
     titleLines,
+    listLayout,
   } = useStore(settingsState);
   const { t } = useTranslation();
   return (
@@ -98,6 +100,27 @@ export default function Appearance() {
         />
       </ItemWrapper>
       <ItemWrapper title={t("settings.appearance.articleList")}>
+        <SelItem
+          label={t("settings.appearance.listLayout")}
+          icon={
+            <SettingIcon variant="green">
+              <Rows3 />
+            </SettingIcon>
+          }
+          settingName="listLayout"
+          settingValue={listLayout}
+          options={[
+            {
+              value: "feedly",
+              label: t("settings.appearance.listLayoutCompact"),
+            },
+            {
+              value: "cards",
+              label: t("settings.appearance.listLayoutCards"),
+            },
+          ]}
+        />
+        <Separator />
         <SliderItem
           label={t("settings.appearance.titleLines")}
           icon={

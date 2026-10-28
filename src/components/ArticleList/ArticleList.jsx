@@ -28,6 +28,7 @@ import { useIsMedium } from "@/hooks/use-mobile.jsx";
 import { reportError } from "@/lib/errors.js";
 import ArticleView from "@/components/ArticleView/ArticleView.jsx";
 import ReadingLayout from "@/components/ReadingLayout.jsx";
+import MarkAllReadConfirm from "./components/MarkAllReadConfirm.jsx";
 const atTop = computed(visibleRange, (range) => range.startIndex === 0);
 const ArticleList = () => {
   const { t } = useTranslation();
@@ -37,11 +38,13 @@ const ArticleList = () => {
   const $filter = useStore(filter);
   const $currentPage = useStore(currentPage);
   const $atTop = useStore(atTop);
-  const { sortDirection, sortField, showHiddenFeeds } = useStore(settingsState);
+  const { sortDirection, sortField, showHiddenFeeds, listLayout } =
+    useStore(settingsState);
+  const inlineReader = listLayout === "feedly";
   const virtuosoRef = useRef(null);
   const isMedium = useIsMedium();
   // 判断是否在移动端且正在查看文章详情
-  const isArticleDetailOpen = isMedium && !!articleId;
+  const isArticleDetailOpen = isMedium && !!articleId && !inlineReader;
   const scope = JSON.stringify([
     feedId,
     categoryId,
@@ -133,7 +136,7 @@ const ArticleList = () => {
   const setVisibleRange = useCallback((range) => visibleRange.set(range), []);
 
   return (
-    <ReadingLayout reader={<ArticleView />}>
+    <ReadingLayout reader={inlineReader ? null : <ArticleView />}>
       <div
         className={cn(
           "article-list-panel motion-sensitive relative flex h-dvh w-full min-w-0 flex-col overflow-hidden",
@@ -169,6 +172,7 @@ const ArticleList = () => {
           setVisibleRange={setVisibleRange}
         />
         <ArticleListFooter />
+        <MarkAllReadConfirm />
       </div>
     </ReadingLayout>
   );
