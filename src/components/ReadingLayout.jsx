@@ -17,6 +17,64 @@ const compactLayout = { articles: 100, reader: 0 };
 const resizeTargetMinimumSize = { fine: 12, coarse: 24 };
 
 export default function ReadingLayout({ children, reader }) {
+  if (reader === null)
+    return <InlineReadingLayout>{children}</InlineReadingLayout>;
+  return <SplitReadingLayout reader={reader}>{children}</SplitReadingLayout>;
+}
+
+// Compact list: articles open inline, so there is no reader panel to size.
+function InlineReadingLayout({ children }) {
+  const { t } = useTranslation();
+  const { open, isMobile } = useSidebar();
+  const showSidebar = !isMobile && open;
+  const { defaultLayout, onLayoutChanged } = useDefaultLayout({
+    id: "nextflux-reading-layout-inline",
+    panelIds: ["feeds", "articles"],
+    storage: readingLayoutStorage,
+    onlySaveAfterUserInteractions: true,
+  });
+  return (
+    <>
+      {!showSidebar && <FeedListSidebar />}
+      <ResizablePanelGroup
+        id="reading-layout-inline"
+        role="main"
+        orientation="horizontal"
+        className="min-w-0 flex-1 bg-sidebar"
+        style={{ height: "100dvh" }}
+        disabled={!showSidebar}
+        defaultLayout={showSidebar ? defaultLayout : { articles: 100 }}
+        onLayoutChanged={onLayoutChanged}
+        resizeTargetMinimumSize={resizeTargetMinimumSize}
+      >
+        {showSidebar && (
+          <ResizablePanel
+            key="feeds"
+            id="feeds"
+            defaultSize="256px"
+            minSize="240px"
+            maxSize="360px"
+            groupResizeBehavior="preserve-pixel-size"
+          >
+            <FeedListSidebar resizable />
+          </ResizablePanel>
+        )}
+        {showSidebar && (
+          <ResizableHandle
+            key="feeds-handle"
+            id="feeds-handle"
+            aria-label={t("common.resizeFeeds")}
+          />
+        )}
+        <ResizablePanel key="articles" id="articles" minSize="280px">
+          {children}
+        </ResizablePanel>
+      </ResizablePanelGroup>
+    </>
+  );
+}
+
+function SplitReadingLayout({ children, reader }) {
   const { t } = useTranslation();
   const { open, isMobile } = useSidebar();
   const isMedium = useIsMedium();

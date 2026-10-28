@@ -57,7 +57,7 @@ export const filteredFeeds = computed(
         case "unread":
           return $unreadCounts[feed.id] > 0;
         default:
-          return true;
+          return !$settings.hideEmptyFeeds || $unreadCounts[feed.id] > 0;
       }
     });
     previousFilteredFeeds = reconcileRecords(previousFilteredFeeds, next);

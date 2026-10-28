@@ -19,6 +19,7 @@ import {
 } from "@/services/articleService.js";
 import { createArticleMutations } from "@/services/articleMutations.js";
 import { reportError } from "@/lib/errors.js";
+import { db } from "@/db/database.js";
 
 export { filter } from "./articleFilterStore.js";
 
@@ -197,6 +198,56 @@ async function markArticleRangeAsRead(articleId, direction) {
   } catch (err) {
     filteredArticles.set(articles);
     throw reportError(err, "articles.markRangeRead");
+  }
+}
+
+// Mark unread articles in the current scope published before `cutoff` as read
+// (Feedly's "older than" menu). Uses the local cache, so it covers what has
+// been synced.
+export async function markOlderAsRead(type = "all", id = null, cutoff) {
+  if (markingAllAsRead.get()) return;
+  markingAllAsRead.set(true);
+  const articles = filteredArticles.get();
+  try {
+    const storedFeeds = await getFeeds();
+    const feedIds = new Set(
+      getAffectedFeedIds(storedFeeds, {
+        type,
+        id,
+        showHiddenFeeds: settingsState.get().showHiddenFeeds,
+      }),
+    );
+    const cutoffTime = cutoff.getTime();
+    const articlesToMark = (
+      await db.articles.where("status").equals("unread").toArray()
+    ).filter(
+      (article) =>
+        feedIds.has(article.feedId) &&
+        new Date(article.published_at).getTime() < cutoffTime,
+    );
+    if (articlesToMark.length === 0) return;
+    const articleIds = new Set(articlesToMark.map(({ id }) => id));
+    filteredArticles.set(
+      articles.map((article) =>
+        articleIds.has(article.id) ? { ...article, status: "read" } : article,
+      ),
+    );
+    await persistArticlesAsRead(articlesToMark);
+    const updatedCounts = { ...unreadCounts.get() };
+    Object.entries(countArticlesByFeed(articlesToMark)).forEach(
+      ([feedId, count]) => {
+        updatedCounts[feedId] = Math.max(
+          0,
+          (updatedCounts[feedId] || 0) - count,
+        );
+      },
+    );
+    unreadCounts.set(updatedCounts);
+  } catch (err) {
+    filteredArticles.set(articles);
+    throw reportError(err, "articles.markOlderRead");
+  } finally {
+    markingAllAsRead.set(false);
   }
 }
 

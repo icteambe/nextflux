@@ -17,11 +17,18 @@ import { isAuthenticated } from "@/domain/auth/accounts.js";
 import { Eye, EyeClosed } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
+import { appConfig } from "@/lib/appConfig.js";
 export default function LoginPage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const [authType, setAuthType] = useState(sessionAccount.authType || "basic");
-  const [serverUrl, setServerUrl] = useState(sessionAccount.serverUrl || "");
+  const [authType, setAuthType] = useState(
+    (sessionAccount.id ? sessionAccount.authType : appConfig.authType) ||
+      "basic",
+  );
+  const [serverUrl, setServerUrl] = useState(
+    sessionAccount.serverUrl || appConfig.serverUrl,
+  );
+  const lockServerUrl = appConfig.lockServerUrl && Boolean(appConfig.serverUrl);
   const [username, setUsername] = useState(sessionAccount.username || "");
   const [password, setPassword] = useState("");
   const [token, setToken] = useState("");
@@ -85,9 +92,15 @@ export default function LoginPage() {
               onChange={(e) => setServerUrl(e.target.value)}
               className="w-full"
               required={true}
+              readOnly={lockServerUrl}
               name="serverUrl"
               id="serverUrl"
             />
+            {lockServerUrl && (
+              <span className="text-xs text-muted-foreground">
+                {t("auth.serverPreconfigured")}
+              </span>
+            )}
             <FieldError />
           </Field>
 

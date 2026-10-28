@@ -6,6 +6,7 @@ import {
   ClockArrowDown,
   ClockArrowUp,
   Eye,
+  EyeOff,
   FolderOpen,
   RefreshCw,
   CalendarDays,
@@ -24,6 +25,7 @@ export default function General() {
     sortDirection,
     sortField,
     showHiddenFeeds,
+    hideEmptyFeeds,
     markAsReadOnScroll,
     syncInterval,
     defaultExpandCategory,
@@ -77,6 +79,17 @@ export default function General() {
           }
           settingName="showHiddenFeeds"
           settingValue={showHiddenFeeds}
+        />
+        <Separator />
+        <SwitchItem
+          label={t("settings.general.hideEmptyFeeds")}
+          icon={
+            <SettingIcon variant="purple">
+              <EyeOff />
+            </SettingIcon>
+          }
+          settingName="hideEmptyFeeds"
+          settingValue={hideEmptyFeeds}
         />
         <Separator />
         <SwitchItem

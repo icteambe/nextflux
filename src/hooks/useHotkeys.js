@@ -12,11 +12,13 @@ import {
   handleToggleContent,
 } from "@/handlers/articleHandlers";
 import { forceSync } from "@/stores/syncStore";
-import {
-  searchDialogOpen,
-  addFeedModalOpen,
-} from "@/stores/modalStore.js";
+import { searchDialogOpen, addFeedModalOpen } from "@/stores/modalStore.js";
 import { useSidebarNavigation } from "@/hooks/useSidebarNavigation";
+import {
+  cursorArticleId,
+  markAllReadConfirmOpen,
+} from "@/stores/readingListStore.js";
+import { filter } from "@/stores/articleFilterStore.js";
 
 export function useHotkeys() {
   const navigate = useNavigate();
@@ -24,7 +26,8 @@ export function useHotkeys() {
   const $activeArticle = useStore(activeArticle);
   const $imageGalleryActive = useStore(imageGalleryActive);
   const { articleId } = useParams();
-  const { navigateToPrevious, navigateToNext, toggleCurrentCategory } = useSidebarNavigation();
+  const { navigateToPrevious, navigateToNext, toggleCurrentCategory } =
+    useSidebarNavigation();
 
   // 获取当前文章在列表中的索引
   const currentIndex = $articles.findIndex((a) => a.id === $activeArticle?.id);
@@ -52,6 +55,23 @@ export function useHotkeys() {
         return;
       }
 
+      if (e.key === "A" && e.shiftKey) {
+        if (filter.get() === "starred") return;
+        e.preventDefault();
+        markAllReadConfirmOpen.set(true);
+        return;
+      }
+
+      // Open the article under the cursor (or the first one) and mark it read.
+      const openArticle = async (article) => {
+        if (!article) return;
+        cursorArticleId.set(article.id);
+        navigate(`${basePath}/article/${article.id}`);
+        if (article.status !== "read") {
+          await handleMarkStatus(article);
+        }
+      };
+
       switch (e.key.toLowerCase()) {
         case "f": // 搜索
           e.preventDefault();
@@ -60,30 +80,40 @@ export function useHotkeys() {
 
         case "j": // 下一篇
           if (!articleId) {
-            if ($articles.length === 0) {
-              return;
-            }
-            const nextArticle = $articles[0];
-            navigate(`${basePath}/article/${nextArticle.id}`);
-            if (nextArticle.status !== "read") {
-              await handleMarkStatus(nextArticle);
-            }
+            // Resume after the cursor when an article was just closed.
+            const cursorIndex = $articles.findIndex(
+              (a) => a.id === cursorArticleId.get(),
+            );
+            await openArticle($articles[cursorIndex + 1]);
           } else if (currentIndex < $articles.length - 1) {
-            const nextArticle = $articles[currentIndex + 1];
-            navigate(`${basePath}/article/${nextArticle.id}`);
-            if (nextArticle.status !== "read") {
-              await handleMarkStatus(nextArticle);
-            }
+            await openArticle($articles[currentIndex + 1]);
           }
           break;
 
         case "k": // 上一篇
-          if (currentIndex > 0) {
-            const prevArticle = $articles[currentIndex - 1];
-            navigate(`${basePath}/article/${prevArticle.id}`);
-            if (prevArticle.status !== "read") {
-              await handleMarkStatus(prevArticle);
-            }
+          if (!articleId) {
+            const cursorIndex = $articles.findIndex(
+              (a) => a.id === cursorArticleId.get(),
+            );
+            if (cursorIndex > 0) await openArticle($articles[cursorIndex - 1]);
+          } else if (currentIndex > 0) {
+            await openArticle($articles[currentIndex - 1]);
+          }
+          break;
+
+        case "o": // 打开/关闭文章
+        case "enter":
+          // Enter on a button or link is that control's own activation.
+          if (e.key === "Enter" && e.target !== document.body) return;
+          e.preventDefault();
+          if (articleId) {
+            cursorArticleId.set(Number(articleId));
+            navigate(basePath || "/");
+          } else {
+            await openArticle(
+              $articles.find((a) => a.id === cursorArticleId.get()) ??
+                $articles[0],
+            );
           }
           break;
 
@@ -109,6 +139,7 @@ export function useHotkeys() {
           if ($imageGalleryActive) {
             return;
           } else {
+            if (articleId) cursorArticleId.set(Number(articleId));
             navigate(basePath || "/");
           }
           break;

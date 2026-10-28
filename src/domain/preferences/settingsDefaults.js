@@ -11,8 +11,11 @@ export const settingsDefaults = {
   sortDirection: "desc", // asc, desc
   sortField: "published_at", // published_at, created_at
   showHiddenFeeds: false,
-  markAsReadOnScroll: false,
+  markAsReadOnScroll: true,
   useThirdPartyMediaPlayer: false,
+  listLayout: "feedly", // cards, feedly (compact rows, article opens inline)
+  listDensity: "cozy", // compact, cozy, comfortable (feedly layout row height)
+  hideEmptyFeeds: true, // sidebar: hide feeds without unread articles
   cardImageSize: "large", // none, small, large
   showFavicon: true,
   titleLines: 2,
