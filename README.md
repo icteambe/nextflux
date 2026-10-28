@@ -30,7 +30,7 @@ A modern RSS reader client for [Miniflux](https://github.com/miniflux/v2) built 
     - Feed discovery and search
     - Advanced options for feed management
 
-## 🍃 This fork (icteambe/nextflux)
+## 🍃 This fork (timvw/nextflux)
 
 Changes on top of [electh/nextflux](https://github.com/electh/nextflux):
 
@@ -53,7 +53,7 @@ Changes on top of [electh/nextflux](https://github.com/electh/nextflux):
   `/srv/config.js`), or from build-time `VITE_DEFAULT_SERVER_URL` /
   `VITE_DEFAULT_AUTH_TYPE` / `VITE_LOCK_SERVER_URL` (see `.env.example`).
   Credentials are still entered once per browser; nothing secret is baked in.
-- Images are published to `ghcr.io/icteambe/nextflux` (`latest`, `main`,
+- Images are published to `ghcr.io/timvw/nextflux` (`latest`, `main`,
   `sha-<commit>`) by the Docker publish workflow.
 
 ## 🚀 Deployment
