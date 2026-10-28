@@ -14,6 +14,10 @@ export default function Shortcuts() {
         desc: t("sidebar.shortcuts.previous"),
       },
       {
+        key: "O",
+        desc: t("sidebar.shortcuts.toggleOpen"),
+      },
+      {
         key: "M",
         desc: t("sidebar.shortcuts.toggleRead"),
       },
@@ -42,6 +46,11 @@ export default function Shortcuts() {
       {
         key: "F",
         desc: t("sidebar.shortcuts.search"),
+      },
+      {
+        key: "A",
+        desc: t("sidebar.shortcuts.markAllRead"),
+        kbdKey: ["shift"],
       },
     ],
     sidebar: [
