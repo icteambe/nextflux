@@ -40,6 +40,12 @@ Changes on top of [electh/nextflux](https://github.com/electh/nextflux):
   `O` / `Enter` / `Esc` to close and return to the list; `J` / `K` continue from
   the row you closed. Switch back to *Cards* to get the upstream two-pane view.
 - **`Shift+A`** marks the current list as read after an in-app confirmation.
+- **Mark-as-read menu** (header check icon) also offers *older than a day /
+  week / month*, like Feedly's.
+- **Feedly-equivalent preferences**: row density (Settings → Appearance),
+  *Hide feeds without unread articles* (Settings → General, on by default),
+  mark-as-read-on-scroll on by default; sort order (Latest/Oldest), theme,
+  Merriweather and text size were already upstream settings.
 - **Preconfigured server**: the login page is prefilled from `public/config.js`
   (`window.NEXTFLUX_CONFIG = { serverUrl, authType, lockServerUrl }`), which a
   deployment can replace at runtime (e.g. a ConfigMap mounted over

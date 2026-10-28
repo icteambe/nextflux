@@ -8,8 +8,11 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import { useParams } from "react-router-dom";
-import { handleMarkAllRead } from "@/handlers/articleHandlers";
-import { CircleCheck } from "lucide-react";
+import {
+  handleMarkAllRead,
+  handleMarkOlderRead,
+} from "@/handlers/articleHandlers";
+import { CircleCheck, History } from "lucide-react";
 import { isSyncing } from "@/stores/syncStore.js";
 import { useStore } from "@nanostores/react";
 import { filter, markingAllAsRead } from "@/stores/articlesStore.js";
@@ -21,6 +24,13 @@ export default function MarkAllReadButton() {
   const $markingAllAsRead = useStore(markingAllAsRead);
   const $filter = useStore(filter);
   const isPending = $isSyncing || $markingAllAsRead;
+  const scope = feedId ? "feed" : categoryId ? "category" : "all";
+  const scopeId = feedId || categoryId;
+  const olderThan = [
+    { days: 1, label: t("articleList.olderThanDay") },
+    { days: 7, label: t("articleList.olderThanWeek") },
+    { days: 30, label: t("articleList.olderThanMonth") },
+  ];
   return (
     <MorphDropdownMenu>
       <MorphDropdownMenuTrigger
@@ -61,6 +71,15 @@ export default function MarkAllReadButton() {
             <CircleCheck />
             <span>{t("articleList.markAllRead")}</span>
           </MorphDropdownMenuItem>
+          {olderThan.map(({ days, label }) => (
+            <MorphDropdownMenuItem
+              key={days}
+              onClick={() => handleMarkOlderRead(scope, scopeId, days)}
+            >
+              <History />
+              <span>{label}</span>
+            </MorphDropdownMenuItem>
+          ))}
         </MorphDropdownMenuGroup>
       </MorphDropdownMenuContent>
     </MorphDropdownMenu>

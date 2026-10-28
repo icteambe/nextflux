@@ -5,6 +5,7 @@ import {
   markAllAsRead,
   markAboveAsRead,
   markBelowAsRead,
+  markOlderAsRead,
   loadingOriginContent,
 } from "../stores/articlesStore.js";
 import minifluxAPI from "@/api/miniflux";
@@ -43,6 +44,16 @@ export const handleMarkAllRead = async (type, id) => {
     }
   } catch (err) {
     reportError(err, "article.markAllRead");
+  }
+};
+
+// Mark articles older than `days` days in the current scope as read.
+export const handleMarkOlderRead = async (type, id, days) => {
+  try {
+    const cutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+    await markOlderAsRead(type, id, cutoff);
+  } catch (err) {
+    reportError(err, "article.markOlderRead");
   }
 };
 

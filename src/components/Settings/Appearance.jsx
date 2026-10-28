@@ -19,6 +19,7 @@ import {
   WrapText,
   LetterText,
   Rows3,
+  Rows4,
 } from "lucide-react";
 import Theme from "./components/Theme";
 import { useTranslation } from "react-i18next";
@@ -35,6 +36,7 @@ export default function Appearance() {
     textPreviewLines,
     titleLines,
     listLayout,
+    listDensity,
   } = useStore(settingsState);
   const { t } = useTranslation();
   return (
@@ -117,6 +119,28 @@ export default function Appearance() {
             {
               value: "cards",
               label: t("settings.appearance.listLayoutCards"),
+            },
+          ]}
+        />
+        <Separator />
+        <SelItem
+          label={t("settings.appearance.listDensity")}
+          icon={
+            <SettingIcon variant="green">
+              <Rows4 />
+            </SettingIcon>
+          }
+          settingName="listDensity"
+          settingValue={listDensity}
+          options={[
+            {
+              value: "compact",
+              label: t("settings.appearance.densityCompact"),
+            },
+            { value: "cozy", label: t("settings.appearance.densityCozy") },
+            {
+              value: "comfortable",
+              label: t("settings.appearance.densityComfortable"),
             },
           ]}
         />

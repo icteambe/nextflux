@@ -37,6 +37,7 @@ export default function ArticleCard({ article }) {
   const $cursorArticleId = useStore(cursorArticleId);
   const {
     listLayout,
+    listDensity,
     markAsReadOnScroll,
     cardImageSize,
     showFavicon,
@@ -121,7 +122,12 @@ export default function ArticleCard({ article }) {
     >
       <div
         className={cn(
-          "relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2 py-1.5",
+          "relative flex cursor-pointer select-none items-center gap-2 rounded-md px-2",
+          listDensity === "compact"
+            ? "py-0.5"
+            : listDensity === "comfortable"
+              ? "py-2.5"
+              : "py-1.5",
           "transform-gpu transition-background duration-200 hover:bg-popover/70",
           isActive && "bg-popover/70",
           !isActive &&
