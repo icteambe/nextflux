@@ -27,7 +27,8 @@ export const settingsDefaults = {
   showLineNumbers: false,
   forceDarkCodeTheme: false,
   defaultExpandCategory: false, // 默认展开分类
-  showUnreadByDefault: false,
+  showUnreadByDefault: false, // superseded by startPage, kept for old settings
+  startPage: "", // all, unread, starred, firstCategory ("" = legacy switch)
   reduceMotion: false,
   interfaceFontSize: "16",
   aiApiKey: "",

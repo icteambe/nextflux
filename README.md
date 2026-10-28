@@ -42,7 +42,8 @@ Changes on top of [electh/nextflux](https://github.com/electh/nextflux):
 - **`Shift+A`** marks the current list as read after an in-app confirmation.
 - **Mark-as-read menu** (header check icon) also offers *older than a day /
   week / month*, like Feedly's.
-- **Feedly-equivalent preferences**: row density (Settings → Appearance),
+- **Feedly-equivalent preferences**: start page (All / Unread / Starred /
+  first category, Settings → General), row density (Settings → Appearance),
   *Hide feeds without unread articles* (Settings → General, on by default),
   mark-as-read-on-scroll on by default; sort order (Latest/Oldest), theme,
   Merriweather and text size were already upstream settings.

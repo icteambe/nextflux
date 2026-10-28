@@ -1,7 +1,7 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import "./App.css";
 import "m3-ripple/ripple.css";
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense, useEffect, useRef } from "react";
 import { SidebarProvider } from "@/components/ui/sidebar.jsx";
 import { authState } from "@/stores/authStore.js";
 import { startAutoSync, stopAutoSync } from "@/stores/syncStore.js";
@@ -21,6 +21,8 @@ import SearchModal from "@/components/Search/SearchModal.jsx";
 import { useZoom } from "@/hooks/useZoom.js";
 import { useFontLoader } from "@/hooks/useFontLoader.js";
 import { useApplyReducedMotionPreference } from "@/hooks/useReducedMotion.js";
+import { feedsByCategory } from "@/stores/feedsStore.js";
+import { getStartPath } from "@/domain/preferences/startPage.js";
 
 const GlobalAudioPlayer = lazy(
   () => import("@/components/GlobalAudio/GlobalAudioPlayer.jsx"),
@@ -41,6 +43,20 @@ function AppEffects() {
   useEffect(() => {
     checkIntegrations();
   }, []);
+
+  // Feedly's "First folder" start page: redirect once per page load.
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const $feedsByCategory = useStore(feedsByCategory);
+  const startPage = settingsState.get().startPage;
+  const redirected = useRef(pathname !== "/");
+  useEffect(() => {
+    if (redirected.current) return;
+    const target = getStartPath({ startPage }, $feedsByCategory);
+    if (!target) return;
+    redirected.current = true;
+    navigate(target, { replace: true });
+  }, [$feedsByCategory, navigate, startPage]);
 
   useHotkeys();
   useZoom();

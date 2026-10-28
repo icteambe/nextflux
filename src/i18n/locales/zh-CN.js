@@ -322,6 +322,8 @@ export default {
       sortByCreateDate: "按创建时间",
       markAsReadOnScroll: "滚动时标记为已读",
       showUnreadByDefault: "默认显示未读文章",
+      startPage: "起始页",
+      startPageFirstCategory: "第一个分类",
       showUnreadByDefaultDescription: "修改后需要刷新页面才能生效",
     },
     appearance: {

@@ -29,6 +29,7 @@ export default function General() {
     markAsReadOnScroll,
     syncInterval,
     defaultExpandCategory,
+    startPage,
     showUnreadByDefault,
   } = useStore(settingsState);
   const { t } = useTranslation();
@@ -146,16 +147,25 @@ export default function General() {
           ]}
         />
         <Separator />
-        <SwitchItem
-          label={t("settings.general.showUnreadByDefault")}
+        <SelItem
+          label={t("settings.general.startPage")}
           description={t("settings.general.showUnreadByDefaultDescription")}
           icon={
             <SettingIcon variant="amber">
               <CircleDot className="p-1 fill-current" />
             </SettingIcon>
           }
-          settingName="showUnreadByDefault"
-          settingValue={showUnreadByDefault}
+          settingName="startPage"
+          settingValue={startPage || (showUnreadByDefault ? "unread" : "all")}
+          options={[
+            { value: "all", label: t("articleList.all") },
+            { value: "unread", label: t("articleList.unread") },
+            { value: "starred", label: t("articleList.starred") },
+            {
+              value: "firstCategory",
+              label: t("settings.general.startPageFirstCategory"),
+            },
+          ]}
         />
         <Separator />
         <SwitchItem

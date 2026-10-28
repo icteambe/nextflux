@@ -329,6 +329,8 @@ export default {
       sortByCreateDate: "Oluşturma tarihine göre",
       markAsReadOnScroll: "Kaydırırken okundu olarak işaretle",
       showUnreadByDefault: "Varsayılan olarak okunmamış makaleleri göster",
+      startPage: "Başlangıç sayfası",
+      startPageFirstCategory: "İlk kategori",
       showUnreadByDefaultDescription:
         "Değişikliklerin geçerli olması için sayfayı yenileyin",
     },

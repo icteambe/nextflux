@@ -331,6 +331,8 @@ export default {
       sortByCreateDate: "Par date de création",
       markAsReadOnScroll: "Marquer comme lu lors du défilement",
       showUnreadByDefault: "Afficher les articles non lus par défaut",
+      startPage: "Page de démarrage",
+      startPageFirstCategory: "Première catégorie",
       showUnreadByDefaultDescription:
         "Actualisez la page pour appliquer les modifications",
     },
