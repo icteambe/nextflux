@@ -34,6 +34,15 @@ A modern RSS reader client for [Miniflux](https://github.com/miniflux/v2) built 
 
 Changes on top of [electh/nextflux](https://github.com/electh/nextflux):
 
+| Compact list | Article opened inline |
+| --- | --- |
+| ![compact list](images/fork-list.jpg) | ![inline article](images/fork-inline.jpg) |
+
+| Dark theme | Mobile |
+| --- | --- |
+| ![dark](images/fork-inline-dark.jpg) | <img src="images/fork-mobile.jpg" alt="mobile" width="300"> |
+
+
 - **Compact list, Feedly-style** (default; Settings → Appearance → List layout):
   one row per article (source, title, time), the article opens *inline* under
   its row instead of in a reader panel. Click or press `O` / `Enter` to open,
