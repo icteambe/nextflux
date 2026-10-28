@@ -30,6 +30,25 @@ A modern RSS reader client for [Miniflux](https://github.com/miniflux/v2) built 
     - Feed discovery and search
     - Advanced options for feed management
 
+## 🍃 This fork (icteambe/nextflux)
+
+Changes on top of [electh/nextflux](https://github.com/electh/nextflux):
+
+- **Compact list, Feedly-style** (default; Settings → Appearance → List layout):
+  one row per article (source, title, time), the article opens *inline* under
+  its row instead of in a reader panel. Click or press `O` / `Enter` to open,
+  `O` / `Enter` / `Esc` to close and return to the list; `J` / `K` continue from
+  the row you closed. Switch back to *Cards* to get the upstream two-pane view.
+- **`Shift+A`** marks the current list as read after an in-app confirmation.
+- **Preconfigured server**: the login page is prefilled from `public/config.js`
+  (`window.NEXTFLUX_CONFIG = { serverUrl, authType, lockServerUrl }`), which a
+  deployment can replace at runtime (e.g. a ConfigMap mounted over
+  `/srv/config.js`), or from build-time `VITE_DEFAULT_SERVER_URL` /
+  `VITE_DEFAULT_AUTH_TYPE` / `VITE_LOCK_SERVER_URL` (see `.env.example`).
+  Credentials are still entered once per browser; nothing secret is baked in.
+- Images are published to `ghcr.io/icteambe/nextflux` (`latest`, `main`,
+  `sha-<commit>`) by the Docker publish workflow.
+
 ## 🚀 Deployment
 
 ### Docker Deployment (standalone)
