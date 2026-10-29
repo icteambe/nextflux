@@ -57,7 +57,13 @@ export default function ArticleCard({ article }) {
   );
   useEffect(() => {
     // 如果文章已读或未启用滚动标记已读,则不需要观察
-    if (article.status === "read" || !markAsReadOnScroll) return;
+    // The compact list marks on scroll at the list level (ArticleListContent).
+    if (
+      article.status === "read" ||
+      !markAsReadOnScroll ||
+      listLayout === "feedly"
+    )
+      return;
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -92,7 +98,7 @@ export default function ArticleCard({ article }) {
         observer.unobserve(card);
       }
     };
-  }, [article, markAsReadOnScroll]);
+  }, [article, markAsReadOnScroll, listLayout]);
   const handleArticleClick = async (article) => {
     const basePath = window.location.pathname.split("/article/")[0];
     const toUrl =
@@ -109,6 +115,11 @@ export default function ArticleCard({ article }) {
     handleArticleClick(article);
   };
   const isActive = parseInt(articleId) === article.id;
+  const isCursor = !isActive && $cursorArticleId === article.id;
+  useEffect(() => {
+    if (isCursor)
+      cardRef.current?.scrollIntoView({ block: "nearest", behavior: "auto" });
+  }, [isCursor]);
   const isRead = article.status === "read";
   const compact = listLayout === "feedly";
   const card = compact ? (
@@ -130,9 +141,7 @@ export default function ArticleCard({ article }) {
               : "py-1.5",
           "transform-gpu transition-background duration-200 hover:bg-popover/70",
           isActive && "bg-popover/70",
-          !isActive &&
-            $cursorArticleId === article.id &&
-            "ring-1 ring-inset ring-border",
+          isCursor && "ring-1 ring-inset ring-border",
         )}
         onClick={handleClick}
       >

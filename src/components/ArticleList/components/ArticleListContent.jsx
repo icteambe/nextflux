@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { memo, useEffect, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import ArticleCard from "./ArticleCard";
 import { useParams } from "react-router-dom";
 import {
@@ -8,12 +8,16 @@ import {
   currentPage,
   loadingMore,
   loading,
+  visibleRange,
 } from "@/stores/articlesStore.js";
 import { useStore } from "@nanostores/react";
 import { Virtuoso } from "react-virtuoso";
 import { useIsMedium } from "@/hooks/use-mobile.jsx";
 import { CheckCheck, Loader2 } from "lucide-react";
-import { handleMarkAllRead } from "@/handlers/articleHandlers";
+import {
+  handleMarkAllRead,
+  handleMarkAboveAsRead,
+} from "@/handlers/articleHandlers";
 import { isSyncing } from "@/stores/syncStore.js";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils.js";
@@ -72,8 +76,24 @@ export default function ArticleListContent({
   const $hasMore = useStore(hasMore);
   const $loading = useStore(loading);
   const $loadingMore = useStore(loadingMore);
-  const { listLayout } = useStore(settingsState);
+  const { listLayout, markAsReadOnScroll } = useStore(settingsState);
   const compact = listLayout === "feedly";
+  // Compact rows are virtualized, so per-row observers miss rows that scroll
+  // out; instead mark everything above the first visible row as read once it
+  // moves down (Feedly's title-only behaviour).
+  const $visibleRange = useStore(visibleRange);
+  const lastStart = useRef(0);
+  useEffect(() => {
+    const start = $visibleRange.startIndex;
+    if (start === 0 || $loading) {
+      lastStart.current = 0;
+      return;
+    }
+    if (!compact || !markAsReadOnScroll || start <= lastStart.current) return;
+    lastStart.current = start;
+    const lastPassed = articles[start - 1];
+    if (lastPassed) handleMarkAboveAsRead(lastPassed.id);
+  }, [$visibleRange, compact, markAsReadOnScroll, articles, $loading]);
   const reduceMotion = useReducedMotion();
   const [scrollViewport, setScrollViewport] = useState(null);
   useEffect(() => {

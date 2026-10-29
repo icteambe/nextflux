@@ -14,8 +14,20 @@ export default function Shortcuts() {
         desc: t("sidebar.shortcuts.previous"),
       },
       {
+        key: "N",
+        desc: t("sidebar.shortcuts.selectNext"),
+      },
+      {
+        key: "P",
+        desc: t("sidebar.shortcuts.selectPrevious"),
+      },
+      {
         key: "O",
         desc: t("sidebar.shortcuts.toggleOpen"),
+      },
+      {
+        key: "X",
+        desc: t("sidebar.shortcuts.markReadNext"),
       },
       {
         key: "M",
@@ -52,6 +64,31 @@ export default function Shortcuts() {
         desc: t("sidebar.shortcuts.markAllRead"),
         kbdKey: ["shift"],
       },
+      {
+        key: "K",
+        desc: t("sidebar.shortcuts.search"),
+        kbdKey: ["ctrl"],
+      },
+      {
+        key: "?",
+        desc: t("sidebar.shortcuts.help"),
+      },
+      {
+        key: "G A",
+        desc: t("sidebar.shortcuts.goAll"),
+      },
+      {
+        key: "G T",
+        desc: t("sidebar.shortcuts.goUnread"),
+      },
+      {
+        key: "G L",
+        desc: t("sidebar.shortcuts.goStarred"),
+      },
+      {
+        key: "G P",
+        desc: t("sidebar.shortcuts.goSettings"),
+      },
     ],
     sidebar: [
       {
@@ -65,16 +102,23 @@ export default function Shortcuts() {
         kbdKey: ["shift"],
       },
       {
-        key: "P",
-        desc: t("sidebar.shortcuts.prevItem"),
+        key: "[",
+        desc: t("sidebar.shortcuts.toggleSidebar"),
       },
       {
-        key: "N",
+        key: "K",
+        desc: t("sidebar.shortcuts.prevItem"),
+        kbdKey: ["shift"],
+      },
+      {
+        key: "J",
         desc: t("sidebar.shortcuts.nextItem"),
+        kbdKey: ["shift"],
       },
       {
         key: "X",
         desc: t("sidebar.shortcuts.toggleCategory"),
+        kbdKey: ["shift"],
       },
     ],
   };

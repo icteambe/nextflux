@@ -1,6 +1,7 @@
 import { persistentAtom } from "@nanostores/persistent";
 
 import { settingsDefaults as defaultValue } from "../domain/preferences/settingsDefaults.js";
+import { applyForkDefaults } from "../domain/preferences/forkDefaults.js";
 
 export const settingsState = persistentAtom("settings", defaultValue, {
   encode: (value) => {
@@ -13,7 +14,7 @@ export const settingsState = persistentAtom("settings", defaultValue, {
     return JSON.stringify(filteredValue);
   },
   decode: (str) => {
-    const storedValue = JSON.parse(str);
+    const storedValue = applyForkDefaults(JSON.parse(str), defaultValue);
     return Object.fromEntries(
       Object.entries(defaultValue).map(([key, value]) => [
         key,

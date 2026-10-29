@@ -9,8 +9,8 @@ import {
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { settingsModalOpen } from "@/stores/modalStore.js";
+import { useState, useEffect } from "react";
+import { settingsModalOpen, settingsModalTab } from "@/stores/modalStore.js";
 import { useStore } from "@nanostores/react";
 import General from "@/components/Settings/General.jsx";
 import Appearance from "@/components/Settings/Appearance.jsx";
@@ -167,6 +167,10 @@ function ContentArea({ activeTab, showTitle = false, className }) {
 function MobileSettings() {
   const isOpen = useStore(settingsModalOpen);
   const [activeTab, setActiveTab] = useState(null);
+  useEffect(() => {
+    if (isOpen && settingsModalTab.get() !== "general")
+      setActiveTab(settingsModalTab.get());
+  }, [isOpen]);
   const { t } = useTranslation();
   const handleSelectMenu = (id) => {
     setActiveTab(id);
@@ -241,10 +245,14 @@ function DesktopSettings() {
   const isOpen = useStore(settingsModalOpen);
   const [activeTab, setActiveTab] = useState("general");
   const { t } = useTranslation();
+  useEffect(() => {
+    if (isOpen) setActiveTab(settingsModalTab.get());
+  }, [isOpen]);
   const handleClose = (value) => {
     settingsModalOpen.set(value);
     if (!value) {
       setActiveTab("general");
+      settingsModalTab.set("general");
     }
   };
   return (

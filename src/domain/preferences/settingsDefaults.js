@@ -1,4 +1,5 @@
 export const settingsDefaults = {
+  forkDefaults: 1, // bumped when the fork changes a default (see settingsStore)
   lineHeight: 1.8,
   fontSize: 16,
   maxWidth: 65, // 单位为ch

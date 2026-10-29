@@ -1,11 +1,64 @@
-# Nextflux
+# Nextflux — Feedly-style fork
 
-A modern RSS reader client for [Miniflux](https://github.com/miniflux/v2) built with React + Vite.
+A fork of [electh/nextflux](https://github.com/electh/nextflux), the Miniflux
+web client built with React + Vite. Everything upstream does still works; this
+fork changes the reading flow to match Feedly's title-only view and adds its
+shortcuts and preferences.
 
-![preview](images/fork-list.jpg)
-![dark](images/fork-inline-dark.jpg)
-![settings](images/fork-settings.jpg)
-![edit](images/fork-edit-feed.jpg)
+| Compact list | Article opened inline |
+| --- | --- |
+| ![compact list](images/fork-list.jpg) | ![inline article](images/fork-inline.jpg) |
+
+| Dark theme | Mobile |
+| --- | --- |
+| ![dark](images/fork-inline-dark.jpg) | <img src="images/fork-mobile.jpg" alt="mobile" width="300"> |
+
+| Settings | Edit feed |
+| --- | --- |
+| ![settings](images/fork-settings.jpg) | ![edit feed](images/fork-edit-feed.jpg) |
+
+## 🍃 What's different
+
+- **Compact list, Feedly-style** (default; Settings → Appearance → List layout):
+  one row per article (source, title, time), the article opens *inline* under
+  its row instead of in a reader panel. Switch back to *Cards* for the upstream
+  two-pane view. Row density is configurable (Compact / Cozy / Comfortable).
+- **Mark as read on scroll** (on by default): rows that scroll past the top of
+  the list are marked read, as in Feedly's title-only view.
+- **Mark-as-read menu** (header check icon) also offers *older than a day /
+  week / month*.
+- **Feedly preferences**: start page (All / Unread / Starred / first category),
+  *Hide feeds without unread articles* (on by default); sort order, theme,
+  fonts and text size were already upstream settings.
+- **Preconfigured server**: the login page is prefilled from `public/config.js`
+  (`window.NEXTFLUX_CONFIG = { serverUrl, authType, lockServerUrl }`), which a
+  deployment can replace at runtime (e.g. a ConfigMap mounted over
+  `/srv/config.js`), or from build-time `VITE_DEFAULT_SERVER_URL` /
+  `VITE_DEFAULT_AUTH_TYPE` / `VITE_LOCK_SERVER_URL` (see `.env.example`).
+  Credentials are still entered once per browser; nothing secret is baked in.
+- Images are published to `ghcr.io/timvw/nextflux` (`latest`, `main`,
+  `sha-<commit>`) by the Docker publish workflow.
+
+### Keyboard shortcuts (Feedly layout)
+
+| Key | Action |
+| --- | --- |
+| `J` / `K` | Open next / previous article inline |
+| `N` / `P` | Select next / previous row without opening |
+| `O` / `Enter` | Open the selected row, or close the open article |
+| `Esc` | Close the open article |
+| `M` / `S` / `V` | Toggle read / toggle star / open original in a new tab |
+| `X` | Mark the current row as read and move to the next |
+| `G` (alone) | Toggle reader view (fetched original content) |
+| `Shift+A` | Mark the current list as read (asks first) |
+| `R` | Refresh |
+| `F` / `Ctrl+K` | Search |
+| `G A` / `G T` / `G L` / `G P` | Go to All / Unread / Starred / Settings |
+| `Shift+J` / `Shift+K` | Next / previous feed or category |
+| `Shift+X` | Expand / collapse the current category |
+| `[` / `Ctrl+B` | Toggle the sidebar |
+| `Shift+N` | Add feed |
+| `?` | Show this list in the app |
 
 ## ✨ Features
 
@@ -29,37 +82,6 @@ A modern RSS reader client for [Miniflux](https://github.com/miniflux/v2) built 
     - Feed hiding
     - Feed discovery and search
     - Advanced options for feed management
-
-## 🍃 This fork (timvw/nextflux)
-
-Changes on top of [electh/nextflux](https://github.com/electh/nextflux):
-
-| Article opened inline | Mobile |
-| --- | --- |
-| ![inline article](images/fork-inline.jpg) | <img src="images/fork-mobile.jpg" alt="mobile" width="300"> |
-
-
-- **Compact list, Feedly-style** (default; Settings → Appearance → List layout):
-  one row per article (source, title, time), the article opens *inline* under
-  its row instead of in a reader panel. Click or press `O` / `Enter` to open,
-  `O` / `Enter` / `Esc` to close and return to the list; `J` / `K` continue from
-  the row you closed. Switch back to *Cards* to get the upstream two-pane view.
-- **`Shift+A`** marks the current list as read after an in-app confirmation.
-- **Mark-as-read menu** (header check icon) also offers *older than a day /
-  week / month*, like Feedly's.
-- **Feedly-equivalent preferences**: start page (All / Unread / Starred /
-  first category, Settings → General), row density (Settings → Appearance),
-  *Hide feeds without unread articles* (Settings → General, on by default),
-  mark-as-read-on-scroll on by default; sort order (Latest/Oldest), theme,
-  Merriweather and text size were already upstream settings.
-- **Preconfigured server**: the login page is prefilled from `public/config.js`
-  (`window.NEXTFLUX_CONFIG = { serverUrl, authType, lockServerUrl }`), which a
-  deployment can replace at runtime (e.g. a ConfigMap mounted over
-  `/srv/config.js`), or from build-time `VITE_DEFAULT_SERVER_URL` /
-  `VITE_DEFAULT_AUTH_TYPE` / `VITE_LOCK_SERVER_URL` (see `.env.example`).
-  Credentials are still entered once per browser; nothing secret is baked in.
-- Images are published to `ghcr.io/timvw/nextflux` (`latest`, `main`,
-  `sha-<commit>`) by the Docker publish workflow.
 
 ## 🚀 Deployment
 
