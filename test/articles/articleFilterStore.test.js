@@ -26,10 +26,10 @@ test("default unread is applied on initialization, not when returning to the lis
   }
 });
 
-test("without default unread, a fresh page starts with all", async () => {
+test("with start page all, a fresh page starts with all", async () => {
   const original = settingsState.get();
   try {
-    settingsState.set({ ...original, showUnreadByDefault: false });
+    settingsState.set({ ...original, startPage: "all" });
     const { filter } = await import(`${storeUrl}?default-all`);
     assert.equal(filter.get(), "all");
     settingsState.set({ ...original, showUnreadByDefault: true });

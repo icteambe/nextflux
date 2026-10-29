@@ -19,3 +19,20 @@ test("a user's later choice is kept", () => {
     false,
   );
 });
+
+test("the start page becomes Unread unless one was chosen", () => {
+  assert.equal(
+    applyForkDefaults({ forkDefaults: 1 }, settingsDefaults).startPage,
+    "unread",
+  );
+  assert.equal(
+    applyForkDefaults({ forkDefaults: 1, startPage: "all" }, settingsDefaults)
+      .startPage,
+    "all",
+  );
+  assert.equal(
+    applyForkDefaults({ forkDefaults: 2, startPage: "" }, settingsDefaults)
+      .startPage,
+    "",
+  );
+});

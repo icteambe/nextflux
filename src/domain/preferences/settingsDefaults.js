@@ -1,5 +1,5 @@
 export const settingsDefaults = {
-  forkDefaults: 1, // bumped when the fork changes a default (see settingsStore)
+  forkDefaults: 2, // bumped when the fork changes a default (see settingsStore)
   lineHeight: 1.8,
   fontSize: 16,
   maxWidth: 65, // 单位为ch
@@ -29,7 +29,7 @@ export const settingsDefaults = {
   forceDarkCodeTheme: false,
   defaultExpandCategory: false, // 默认展开分类
   showUnreadByDefault: false, // superseded by startPage, kept for old settings
-  startPage: "", // all, unread, starred, firstCategory ("" = legacy switch)
+  startPage: "unread", // all, unread, starred, firstCategory ("" = legacy switch)
   reduceMotion: false,
   interfaceFontSize: "16",
   aiApiKey: "",
