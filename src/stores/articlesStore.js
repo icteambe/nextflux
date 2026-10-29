@@ -251,6 +251,37 @@ export async function markOlderAsRead(type = "all", id = null, cutoff) {
   }
 }
 
+// Mark the given unread rows of the current list as read (scroll-to-read).
+export async function markArticlesAsRead(ids) {
+  const wanted = new Set(ids);
+  const articles = filteredArticles.get();
+  const articlesToMark = articles.filter(
+    (article) => wanted.has(article.id) && article.status !== "read",
+  );
+  if (articlesToMark.length === 0) return;
+
+  const articleIds = new Set(articlesToMark.map(({ id }) => id));
+  const countsByFeed = countArticlesByFeed(articlesToMark);
+  filteredArticles.set(
+    articles.map((article) =>
+      articleIds.has(article.id) ? { ...article, status: "read" } : article,
+    ),
+  );
+
+  try {
+    await persistArticlesAsRead(articlesToMark);
+
+    const updatedCounts = { ...unreadCounts.get() };
+    Object.entries(countsByFeed).forEach(([feedId, count]) => {
+      updatedCounts[feedId] = Math.max(0, (updatedCounts[feedId] || 0) - count);
+    });
+    unreadCounts.set(updatedCounts);
+  } catch (err) {
+    filteredArticles.set(articles);
+    throw reportError(err, "articles.markScrolledRead");
+  }
+}
+
 export function markAboveAsRead(articleId) {
   return markArticleRangeAsRead(articleId, "above");
 }

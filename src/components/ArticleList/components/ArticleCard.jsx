@@ -281,7 +281,7 @@ export default function ArticleCard({ article }) {
   return (
     <ContextMenu>
       <>
-        <ContextMenuTrigger render={card} />
+        <ContextMenuTrigger render={card} className="select-text" />
 
         <ContextMenuContent>
           <ContextMenuGroup>

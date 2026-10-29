@@ -16,8 +16,12 @@ import { useIsMedium } from "@/hooks/use-mobile.jsx";
 import { CheckCheck, Loader2 } from "lucide-react";
 import {
   handleMarkAllRead,
-  handleMarkAboveAsRead,
+  handleMarkScrolledPastAsRead,
 } from "@/handlers/articleHandlers";
+import {
+  getScrolledPastIds,
+  getVisibleIds,
+} from "@/domain/articles/scrollRead.js";
 import { isSyncing } from "@/stores/syncStore.js";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils.js";
@@ -79,20 +83,36 @@ export default function ArticleListContent({
   const { listLayout, markAsReadOnScroll } = useStore(settingsState);
   const compact = listLayout === "feedly";
   // Compact rows are virtualized, so per-row observers miss rows that scroll
-  // out; instead mark everything above the first visible row as read once it
-  // moves down (Feedly's title-only behaviour).
+  // out. Instead remember which rows were on screen and mark those that have
+  // moved above the viewport (Feedly's title-only behaviour). Tracking ids
+  // rather than indexes keeps a shrinking list or a programmatic jump from
+  // marking rows the reader never saw.
   const $visibleRange = useStore(visibleRange);
-  const lastStart = useRef(0);
+  const previousVisibleIds = useRef([]);
+  // Index the list was last told to jump to; range reports until the jump
+  // lands (which react-virtuoso delivers with a delay) are not user scrolling.
+  const pendingJump = useRef(null);
   useEffect(() => {
-    const start = $visibleRange.startIndex;
-    if (start === 0 || $loading) {
-      lastStart.current = 0;
+    if ($loading) {
+      previousVisibleIds.current = [];
       return;
     }
-    if (!compact || !markAsReadOnScroll || start <= lastStart.current) return;
-    lastStart.current = start;
-    const lastPassed = articles[start - 1];
-    if (lastPassed) handleMarkAboveAsRead(lastPassed.id);
+    const visibleIds = getVisibleIds(articles, $visibleRange);
+    const jump = pendingJump.current;
+    const suppressed =
+      jump !== null &&
+      Date.now() - jump.at < 3000 &&
+      $visibleRange.startIndex !== jump.index;
+    if (jump !== null && !suppressed) pendingJump.current = null;
+    if (compact && markAsReadOnScroll && jump === null) {
+      const passed = getScrolledPastIds(
+        previousVisibleIds.current,
+        articles,
+        $visibleRange.startIndex,
+      );
+      if (passed.length) handleMarkScrolledPastAsRead(passed);
+    }
+    previousVisibleIds.current = visibleIds;
   }, [$visibleRange, compact, markAsReadOnScroll, articles, $loading]);
   const reduceMotion = useReducedMotion();
   const [scrollViewport, setScrollViewport] = useState(null);
@@ -100,13 +120,24 @@ export default function ArticleListContent({
     if (isMedium) {
       return;
     }
-    if (index >= 0) {
-      virtuosoRef.current?.scrollIntoView({
-        index: index,
-        behavior: reduceMotion ? "auto" : "smooth",
+    if (index < 0) return;
+    if (compact) {
+      // The opened row expands underneath itself, so pin it to the top like
+      // Feedly does; a smooth scroll would land wrong once the body loads.
+      // Rows that slide above the viewport by this jump are not "scrolled past".
+      pendingJump.current = { index, at: Date.now() };
+      virtuosoRef.current?.scrollToIndex({
+        index,
+        align: "start",
+        behavior: "auto",
       });
+      return;
     }
-  }, [isMedium, index, reduceMotion, virtuosoRef, scrollViewport]);
+    virtuosoRef.current?.scrollIntoView({
+      index: index,
+      behavior: reduceMotion ? "auto" : "smooth",
+    });
+  }, [isMedium, index, compact, reduceMotion, virtuosoRef, scrollViewport]);
   const handleEndReached = () => {
     if (!$hasMore || loadingMore.get()) return;
     loadingMore.set(true);

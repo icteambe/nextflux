@@ -4,6 +4,7 @@ import {
   updateArticleStatus,
   markAllAsRead,
   markAboveAsRead,
+  markArticlesAsRead,
   markBelowAsRead,
   markOlderAsRead,
   loadingOriginContent,
@@ -54,6 +55,15 @@ export const handleMarkOlderRead = async (type, id, days) => {
     await markOlderAsRead(type, id, cutoff);
   } catch (err) {
     reportError(err, "article.markOlderRead");
+  }
+};
+
+// Rows scrolled past in the compact list
+export const handleMarkScrolledPastAsRead = async (ids) => {
+  try {
+    await markArticlesAsRead(ids);
+  } catch (err) {
+    reportError(err, "article.markScrolledRead");
   }
 };
 
