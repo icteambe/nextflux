@@ -11,7 +11,6 @@ export const logoutModalOpen = atom(false);
 export const aboutModalOpen = atom(false);
 export const searchDialogOpen = atom(false);
 export const settingsModalOpen = atom(false);
-export const feedsOverviewOpen = atom(false);
 // Tab the settings dialog opens on (e.g. "shortcuts" for the ? key).
 export const settingsModalTab = atom("general");
 export const aiModalOpen = atom(false);
@@ -34,7 +33,6 @@ export const isModalOpen = computed(
     aboutModalOpen,
     searchDialogOpen,
     settingsModalOpen,
-    feedsOverviewOpen,
     aiModalOpen,
   ],
   (...args) => {

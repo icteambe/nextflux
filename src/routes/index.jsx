@@ -3,6 +3,7 @@ import App from "@/App";
 import ArticleList from "@/components/ArticleList/ArticleList";
 import LoginPage from "@/pages/LoginPage";
 import ErrorPage from "@/pages/ErrorPage";
+import FeedsPage from "@/pages/FeedsPage";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
 const routerConfig = {
@@ -35,6 +36,10 @@ export const router = createBrowserRouter(
         {
           path: "/",
           element: <ArticleList />,
+        },
+        {
+          path: "feeds",
+          element: <FeedsPage />,
         },
         {
           path: "feed/:feedId",

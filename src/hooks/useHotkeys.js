@@ -16,7 +16,6 @@ import {
   searchDialogOpen,
   addFeedModalOpen,
   settingsModalOpen,
-  feedsOverviewOpen,
   settingsModalTab,
 } from "@/stores/modalStore.js";
 import { useSidebar } from "@/components/ui/sidebar.jsx";
@@ -94,7 +93,7 @@ export function useHotkeys() {
 
       const goTo = (target) => {
         if (target === "feeds") {
-          feedsOverviewOpen.set(true);
+          navigate("/feeds");
           return;
         }
         if (target === "settings") {

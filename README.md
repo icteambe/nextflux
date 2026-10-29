@@ -29,9 +29,9 @@ shortcuts and preferences.
   (`R`), so the list does not jump while you read.
 - **Mark-as-read menu** (header check icon) also offers *older than a day /
   week / month*.
-- **Feeds overview**: click *Feeds* in the sidebar (or `G F`) for every
-  subscription, grouped by category, with search, unread counts, error flags
-  and edit / unsubscribe actions. The sidebar itself hides feeds without unread
+- **Feeds page**: click *Feeds* in the sidebar (or `G F`) for a page listing
+  every subscription, grouped by category, with search, unread counts, error
+  flags and edit / unsubscribe actions. The sidebar itself hides feeds without unread
   articles by default.
 - **Feedly preferences**: start page (All / Unread / Starred / first category),
   *Hide feeds without unread articles* (on by default); sort order, theme,
