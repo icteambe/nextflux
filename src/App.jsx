@@ -18,6 +18,7 @@ import UnsubscribeModal from "@/components/ArticleList/components/UnsubscribeMod
 import EditFeedModal from "@/components/ArticleList/components/EditFeedModal.jsx";
 import { checkIntegrations } from "@/stores/basicInfoStore.js";
 import SearchModal from "@/components/Search/SearchModal.jsx";
+import FeedsOverviewModal from "@/components/FeedList/components/FeedsOverviewModal.jsx";
 import { useZoom } from "@/hooks/useZoom.js";
 import { useFontLoader } from "@/hooks/useFontLoader.js";
 import { useApplyReducedMotionPreference } from "@/hooks/useReducedMotion.js";
@@ -79,6 +80,7 @@ function App() {
       <UnsubscribeModal />
       <EditFeedModal />
       <SearchModal />
+      <FeedsOverviewModal />
       <Suspense fallback={null}>
         <GlobalAudioPlayer />
       </Suspense>

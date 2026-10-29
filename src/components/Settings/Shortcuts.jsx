@@ -86,6 +86,10 @@ export default function Shortcuts() {
         desc: t("sidebar.shortcuts.goStarred"),
       },
       {
+        key: "G F",
+        desc: t("sidebar.shortcuts.goFeeds"),
+      },
+      {
         key: "G P",
         desc: t("sidebar.shortcuts.goSettings"),
       },

@@ -16,6 +16,7 @@ import {
   searchDialogOpen,
   addFeedModalOpen,
   settingsModalOpen,
+  feedsOverviewOpen,
   settingsModalTab,
 } from "@/stores/modalStore.js";
 import { useSidebar } from "@/components/ui/sidebar.jsx";
@@ -92,6 +93,10 @@ export function useHotkeys() {
       }
 
       const goTo = (target) => {
+        if (target === "feeds") {
+          feedsOverviewOpen.set(true);
+          return;
+        }
         if (target === "settings") {
           settingsModalTab.set("general");
           settingsModalOpen.set(true);
@@ -103,7 +108,13 @@ export function useHotkeys() {
       if (pendingChord.current) {
         clearTimeout(pendingChord.current);
         pendingChord.current = null;
-        const chords = { a: "all", t: "unread", l: "starred", p: "settings" };
+        const chords = {
+          a: "all",
+          t: "unread",
+          l: "starred",
+          f: "feeds",
+          p: "settings",
+        };
         const target = chords[e.key.toLowerCase()];
         if (target) {
           e.preventDefault();

@@ -26,6 +26,7 @@ export default function CustomModal({
   fixedHeight = false,
   children,
   footer,
+  className,
 }) {
   const isMedium = useIsMedium();
   const handleOpenChange = (nextOpen) => {
@@ -73,6 +74,7 @@ export default function CustomModal({
         className={cn(
           "flex max-h-[85dvh] flex-col gap-0 overflow-hidden p-0 sm:max-w-lg",
           fixedHeight && "h-[66dvh]",
+          className,
         )}
       >
         <DialogHeader className="p-4">

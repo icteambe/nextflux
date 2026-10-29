@@ -29,6 +29,10 @@ shortcuts and preferences.
   (`R`), so the list does not jump while you read.
 - **Mark-as-read menu** (header check icon) also offers *older than a day /
   week / month*.
+- **Feeds overview**: click *Feeds* in the sidebar (or `G F`) for every
+  subscription, grouped by category, with search, unread counts, error flags
+  and edit / unsubscribe actions. The sidebar itself hides feeds without unread
+  articles by default.
 - **Feedly preferences**: start page (All / Unread / Starred / first category),
   *Hide feeds without unread articles* (on by default); sort order, theme,
   fonts and text size were already upstream settings.
@@ -55,7 +59,7 @@ shortcuts and preferences.
 | `Shift+A` | Mark the current list as read (asks first) |
 | `R` | Refresh |
 | `F` / `Ctrl+K` | Search |
-| `G A` / `G T` / `G L` / `G P` | Go to All / Unread / Starred / Settings |
+| `G A` / `G T` / `G L` / `G F` / `G P` | Go to All / Unread / Starred / Feeds / Settings |
 | `Shift+J` / `Shift+K` | Next / previous feed or category |
 | `Shift+X` | Expand / collapse the current category |
 | `[` / `Ctrl+B` | Toggle the sidebar |
