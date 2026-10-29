@@ -2,10 +2,10 @@
 
 A modern RSS reader client for [Miniflux](https://github.com/miniflux/v2) built with React + Vite.
 
-![preview](images/preview.png)
-![dark](images/dark.png)
-![settings](images/settings.png)
-![edit](images/edit.png)
+![preview](images/fork-list.jpg)
+![dark](images/fork-inline-dark.jpg)
+![settings](images/fork-settings.jpg)
+![edit](images/fork-edit-feed.jpg)
 
 ## ✨ Features
 
@@ -34,13 +34,9 @@ A modern RSS reader client for [Miniflux](https://github.com/miniflux/v2) built 
 
 Changes on top of [electh/nextflux](https://github.com/electh/nextflux):
 
-| Compact list | Article opened inline |
+| Article opened inline | Mobile |
 | --- | --- |
-| ![compact list](images/fork-list.jpg) | ![inline article](images/fork-inline.jpg) |
-
-| Dark theme | Mobile |
-| --- | --- |
-| ![dark](images/fork-inline-dark.jpg) | <img src="images/fork-mobile.jpg" alt="mobile" width="300"> |
+| ![inline article](images/fork-inline.jpg) | <img src="images/fork-mobile.jpg" alt="mobile" width="300"> |
 
 
 - **Compact list, Feedly-style** (default; Settings → Appearance → List layout):
