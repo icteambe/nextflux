@@ -24,7 +24,9 @@ shortcuts and preferences.
   its row instead of in a reader panel. Switch back to *Cards* for the upstream
   two-pane view. Row density is configurable (Compact / Cozy / Comfortable).
 - **Mark as read on scroll** (on by default): rows that scroll past the top of
-  the list are marked read, as in Feedly's title-only view.
+  the list are marked read, as in Feedly's title-only view. Under the *Unread*
+  filter they stay on screen, dimmed, until you open another list or refresh
+  (`R`), so the list does not jump while you read.
 - **Mark-as-read menu** (header check icon) also offers *older than a day /
   week / month*.
 - **Feedly preferences**: start page (All / Unread / Starred / first category),

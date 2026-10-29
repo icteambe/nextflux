@@ -1,3 +1,4 @@
+import { listEpoch } from "./readingListStore.js";
 import { atom } from "nanostores";
 import { getLastSyncTime, isHistorySyncComplete } from "@/db/storage.js";
 import { reportError } from "@/lib/errors.js";
@@ -128,5 +129,6 @@ function cancelSync() {
 }
 
 export function forceSync() {
+  listEpoch.set(listEpoch.get() + 1);
   return sync();
 }

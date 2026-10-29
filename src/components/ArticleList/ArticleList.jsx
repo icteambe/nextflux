@@ -13,6 +13,8 @@ import {
 import { useLiveQuery } from "dexie-react-hooks";
 import { loadArticlePage } from "@/services/articleService.js";
 import { reconcileRecords } from "@/domain/sync/reconcileRecords.js";
+import { mergeKeepingReadRows } from "@/domain/articles/mergeReadRows.js";
+import { listEpoch } from "@/stores/readingListStore.js";
 import { computed } from "nanostores";
 import { db } from "@/db/database.js";
 import { Button } from "@/components/ui/button";
@@ -45,6 +47,7 @@ const ArticleList = () => {
   const isMedium = useIsMedium();
   // 判断是否在移动端且正在查看文章详情
   const isArticleDetailOpen = isMedium && !!articleId && !inlineReader;
+  const $listEpoch = useStore(listEpoch);
   const scope = JSON.stringify([
     feedId,
     categoryId,
@@ -52,6 +55,7 @@ const ArticleList = () => {
     sortDirection,
     sortField,
     showHiddenFeeds,
+    $listEpoch,
   ]);
   const previousScope = useRef(null);
   const result = useLiveQuery(async () => {
@@ -84,6 +88,7 @@ const ArticleList = () => {
     sortField,
     showHiddenFeeds,
     $currentPage,
+    $listEpoch,
   ]);
 
   useEffect(() => {
@@ -115,7 +120,11 @@ const ArticleList = () => {
           : firstKnownIndex
         : 0,
     );
-    let incoming = result.articles;
+    // At the top, new rows come in but rows read meanwhile stay until the
+    // scope changes or the list is refreshed (Feedly behaviour).
+    let incoming = previous.length
+      ? mergeKeepingReadRows(previous, result.articles, byId)
+      : result.articles;
     if (!$atTop && previous.length) {
       const lastIndex = result.articles.findIndex(
         ({ id }) => id === previous.at(-1).id,
