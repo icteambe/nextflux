@@ -160,6 +160,7 @@ export default {
       selectNext: "Select next article",
       selectPrevious: "Select previous article",
       markReadNext: "Mark as read and move on",
+      pageDown: "Page through the article, then open the next one",
       help: "Show shortcuts",
       goAll: "Go to All",
       goUnread: "Go to Unread",

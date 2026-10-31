@@ -159,6 +159,7 @@ export default {
       selectNext: "选择下一篇",
       selectPrevious: "选择上一篇",
       markReadNext: "标记已读并继续",
+      pageDown: "翻页阅读文章，到底后打开下一篇",
       help: "显示快捷键",
       goAll: "前往全部",
       goUnread: "前往未读",

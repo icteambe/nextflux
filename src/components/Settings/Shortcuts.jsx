@@ -30,6 +30,10 @@ export default function Shortcuts() {
         desc: t("sidebar.shortcuts.markReadNext"),
       },
       {
+        key: "Space",
+        desc: t("sidebar.shortcuts.pageDown"),
+      },
+      {
         key: "M",
         desc: t("sidebar.shortcuts.toggleRead"),
       },

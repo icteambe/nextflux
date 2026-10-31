@@ -1,5 +1,5 @@
 export const settingsDefaults = {
-  forkDefaults: 2, // bumped when the fork changes a default (see settingsStore)
+  forkDefaults: 3, // bumped when the fork changes a default (see settingsStore)
   lineHeight: 1.8,
   fontSize: 16,
   maxWidth: 65, // 单位为ch
@@ -10,7 +10,7 @@ export const settingsDefaults = {
   feedIconShape: "square", // circle, square
   useGrayIcon: false,
   sortDirection: "desc", // asc, desc
-  sortField: "published_at", // published_at, created_at
+  sortField: "created_at", // published_at, created_at (arrival, like Feedly)
   showHiddenFeeds: false,
   markAsReadOnScroll: true,
   useThirdPartyMediaPlayer: false,

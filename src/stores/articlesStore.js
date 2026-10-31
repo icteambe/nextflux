@@ -20,6 +20,7 @@ import {
 import { createArticleMutations } from "@/services/articleMutations.js";
 import { reportError } from "@/lib/errors.js";
 import { db } from "@/db/database.js";
+import { keptUnreadIds } from "./readingListStore.js";
 
 export { filter } from "./articleFilterStore.js";
 
@@ -61,6 +62,11 @@ const mutateArticle = createArticleMutations({
 export function updateArticleStatus(article) {
   if (!article) return;
   const status = article.status === "read" ? "unread" : "read";
+  // An explicit "unread" is kept while scrolling; reading it again lifts that.
+  const kept = new Set(keptUnreadIds.get());
+  if (status === "unread") kept.add(article.id);
+  else kept.delete(article.id);
+  keptUnreadIds.set(kept);
   return mutateArticle(article, "status", status, async () => {
     const count = await persistArticleStatus(article, status);
     unreadCounts.set({ ...unreadCounts.get(), [article.feedId]: count });
@@ -254,9 +260,13 @@ export async function markOlderAsRead(type = "all", id = null, cutoff) {
 // Mark the given unread rows of the current list as read (scroll-to-read).
 export async function markArticlesAsRead(ids) {
   const wanted = new Set(ids);
+  const kept = keptUnreadIds.get();
   const articles = filteredArticles.get();
   const articlesToMark = articles.filter(
-    (article) => wanted.has(article.id) && article.status !== "read",
+    (article) =>
+      wanted.has(article.id) &&
+      article.status !== "read" &&
+      !kept.has(article.id),
   );
   if (articlesToMark.length === 0) return;
 

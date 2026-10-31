@@ -161,6 +161,7 @@ export default {
       selectNext: "Sonraki makaleyi seç",
       selectPrevious: "Önceki makaleyi seç",
       markReadNext: "Okundu işaretle ve geç",
+      pageDown: "Makaleyi kaydır, sonunda bir sonrakini aç",
       help: "Kısayolları göster",
       goAll: "Tümüne git",
       goUnread: "Okunmamışlara git",

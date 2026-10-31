@@ -14,7 +14,8 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { loadArticlePage } from "@/services/articleService.js";
 import { reconcileRecords } from "@/domain/sync/reconcileRecords.js";
 import { mergeKeepingReadRows } from "@/domain/articles/mergeReadRows.js";
-import { listEpoch } from "@/stores/readingListStore.js";
+import { matchesListFilter } from "@/domain/articles/listFilter.js";
+import { keptUnreadIds, listEpoch } from "@/stores/readingListStore.js";
 import { computed } from "nanostores";
 import { db } from "@/db/database.js";
 import { Button } from "@/components/ui/button";
@@ -99,6 +100,7 @@ const ArticleList = () => {
       visibleRange.set({ startIndex: 0, endIndex: 0 });
       loading.set(true);
       setPendingCount(0);
+      keptUnreadIds.set(new Set());
     }
     if (!result || result.scope !== scope) return;
     const previous = filteredArticles.get();
@@ -121,9 +123,12 @@ const ArticleList = () => {
         : 0,
     );
     // At the top, new rows come in but rows read meanwhile stay until the
-    // scope changes or the list is refreshed (Feedly behaviour).
+    // scope changes or the list is refreshed (Feedly behaviour). Rows that
+    // still match the filter and only fell off the page are let go.
     let incoming = previous.length
-      ? mergeKeepingReadRows(previous, result.articles, byId)
+      ? mergeKeepingReadRows(previous, result.articles, byId, (article) =>
+          matchesListFilter(article, $filter),
+        )
       : result.articles;
     if (!$atTop && previous.length) {
       const lastIndex = result.articles.findIndex(
@@ -141,7 +146,7 @@ const ArticleList = () => {
     hasMore.set(result.isMore);
     loading.set(false);
     loadingMore.set(false);
-  }, [result, scope, $atTop]);
+  }, [result, scope, $atTop, $filter]);
   const setVisibleRange = useCallback((range) => visibleRange.set(range), []);
 
   return (

@@ -161,6 +161,7 @@ export default {
       selectNext: "Sélectionner l'article suivant",
       selectPrevious: "Sélectionner l'article précédent",
       markReadNext: "Marquer comme lu et passer au suivant",
+      pageDown: "Faire défiler l'article, puis ouvrir le suivant",
       help: "Afficher les raccourcis",
       goAll: "Aller à Tous",
       goUnread: "Aller aux Non lus",

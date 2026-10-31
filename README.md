@@ -26,7 +26,17 @@ shortcuts and preferences.
 - **Mark as read on scroll** (on by default): rows that scroll past the top of
   the list are marked read, as in Feedly's title-only view. Under the *Unread*
   filter they stay on screen, dimmed, until you open another list or refresh
-  (`R`), so the list does not jump while you read.
+  (`R`), so the list does not jump while you read. An article you mark unread
+  yourself (`M`) is kept unread while you scroll on, like Feedly's *keep unread*.
+- **Reading like Feedly**: an opened row is pinned to the top of the list (also
+  after `J` / `K`), clicking the open row's title collapses it, `Space` pages
+  through the article and opens the next one once its end is on screen
+  (`Shift+Space` pages back), and the list leaves room below the last rows so
+  they can be read at the top too.
+- **Ordered by arrival** (default; Settings → General → Sort field): like
+  Feedly's *Latest*, rows are ordered by when the article reached the server,
+  and the time column shows that, so backdated or wrongly dated posts do not
+  float to the top. Switch to *By publish date* for the upstream behaviour.
 - **Mark-as-read menu** (header check icon) also offers *older than a day /
   week / month*.
 - **Feeds page**: click *Feeds* in the sidebar (or `G F`) for a page listing

@@ -25,6 +25,8 @@ import {
   markAllReadConfirmOpen,
 } from "@/stores/readingListStore.js";
 import { filter } from "@/stores/articleFilterStore.js";
+import { settingsState } from "@/stores/settingsStore.js";
+import { spaceAction } from "@/domain/articles/pinRow.js";
 
 export function useHotkeys() {
   const navigate = useNavigate();
@@ -156,6 +158,41 @@ export function useHotkeys() {
           e.preventDefault();
           searchDialogOpen.set(true);
           break;
+
+        case " ": {
+          // Feedly: space pages through the open article and, once its end is
+          // on screen, opens the next one; Shift+Space pages back up.
+          const { listLayout } = settingsState.get();
+          // A focused control keeps its own space handling (buttons, links).
+          if (
+            listLayout !== "feedly" ||
+            ["BUTTON", "A", "SELECT"].includes(e.target.tagName) ||
+            e.target.closest?.("[role='button'],[role='menuitem'],[role='tab']")
+          )
+            return;
+          const viewport = document.querySelector(
+            ".article-list-content [data-slot='scroll-area-viewport']",
+          );
+          if (!viewport) return;
+          e.preventDefault();
+          // Instant, not smooth: the virtual list re-anchors while a freshly
+          // opened article is still being measured and cancels smooth scrolls.
+          const page = Math.round(viewport.clientHeight * 0.85);
+          if (e.shiftKey) {
+            viewport.scrollTop -= page;
+            break;
+          }
+          const openRow = articleId
+            ? viewport.querySelector(`[data-article-id="${articleId}"]`)
+            : null;
+          if (spaceAction(viewport, openRow) === "next") {
+            if (currentIndex < $articles.length - 1)
+              await openArticle($articles[currentIndex + 1]);
+            break;
+          }
+          viewport.scrollTop += page;
+          break;
+        }
 
         case "j": // 下一篇
           if (!articleId) {

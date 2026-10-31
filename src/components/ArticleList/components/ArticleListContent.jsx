@@ -22,6 +22,7 @@ import {
   getScrolledPastIds,
   getVisibleIds,
 } from "@/domain/articles/scrollRead.js";
+import { pinRowToTop } from "@/domain/articles/pinRow.js";
 import { isSyncing } from "@/stores/syncStore.js";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils.js";
@@ -37,11 +38,18 @@ const ArticleItem = memo(({ article, isLast, compact }) => (
 ArticleItem.displayName = "ArticleItem";
 const ListHeader = () => <div className="vlist-header h-2" />;
 function ListFooter({
-  context: { feedId, categoryId, $filter, $isSyncing, $loadingMore },
+  context: { feedId, categoryId, $filter, $isSyncing, $loadingMore, compact },
 }) {
   const { t } = useTranslation();
   return (
-    <div className="vlist-footer mx-auto h-24 w-full max-w-[560px] px-2 pt-2">
+    // In the compact list the footer fills most of the viewport (Feedly's
+    // "all done" area) so the last rows can still be pinned to the top.
+    <div
+      className={cn(
+        "vlist-footer mx-auto w-full max-w-[560px] px-2 pt-2",
+        compact ? "min-h-[calc(100dvh-9rem)]" : "h-24",
+      )}
+    >
       <Button
         size="sm"
         variant="secondary"
@@ -92,6 +100,8 @@ export default function ArticleListContent({
   // Index the list was last told to jump to; range reports until the jump
   // lands (which react-virtuoso delivers with a delay) are not user scrolling.
   const pendingJump = useRef(null);
+  // True while the opened row is being pinned to the top (see pinRowToTop).
+  const pinning = useRef(false);
   useEffect(() => {
     if ($loading) {
       previousVisibleIds.current = [];
@@ -104,7 +114,7 @@ export default function ArticleListContent({
       Date.now() - jump.at < 3000 &&
       $visibleRange.startIndex !== jump.index;
     if (jump !== null && !suppressed) pendingJump.current = null;
-    if (compact && markAsReadOnScroll && jump === null) {
+    if (compact && markAsReadOnScroll && jump === null && !pinning.current) {
       const passed = getScrolledPastIds(
         previousVisibleIds.current,
         articles,
@@ -131,12 +141,31 @@ export default function ArticleListContent({
         align: "start",
         behavior: "auto",
       });
-      return;
+      // The previous article collapsing above shifts everything; correct
+      // against the DOM until the row really sits at the top.
+      if (!scrollViewport) return;
+      const id = articles[index]?.id;
+      pinning.current = true;
+      const cancel = pinRowToTop(
+        scrollViewport,
+        () => scrollViewport.querySelector(`[data-article-id="${id}"]`),
+        {
+          onDone: () => {
+            pinning.current = false;
+          },
+        },
+      );
+      return () => {
+        cancel();
+        pinning.current = false;
+      };
     }
     virtuosoRef.current?.scrollIntoView({
       index: index,
       behavior: reduceMotion ? "auto" : "smooth",
     });
+    // `articles` is read for the row id only; a list update must not re-pin.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMedium, index, compact, reduceMotion, virtuosoRef, scrollViewport]);
   const handleEndReached = () => {
     if (!$hasMore || loadingMore.get()) return;
@@ -150,8 +179,9 @@ export default function ArticleListContent({
       $filter,
       $isSyncing,
       $loadingMore,
+      compact,
     }),
-    [feedId, categoryId, $filter, $isSyncing, $loadingMore],
+    [feedId, categoryId, $filter, $isSyncing, $loadingMore, compact],
   );
   return (
     <div className="min-h-0 flex-1 overflow-hidden">

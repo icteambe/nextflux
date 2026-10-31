@@ -7,3 +7,6 @@ export const cursorArticleId = atom(null);
 export const listEpoch = atom(0);
 // Opened by Shift+A; the list renders the confirmation dialog.
 export const markAllReadConfirmOpen = atom(false);
+// Articles the reader marked unread on purpose: scrolling past them must not
+// mark them read again (Feedly's "keep unread"). Reset when the list changes.
+export const keptUnreadIds = atom(new Set());

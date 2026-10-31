@@ -4,6 +4,8 @@ export const forkDefaultOverrides = {
   1: { listLayout: "feedly", markAsReadOnScroll: true, hideEmptyFeeds: true },
   // Open on Unread like Feedly, unless a start page was already chosen.
   2: (stored) => (stored.startPage ? {} : { startPage: "unread" }),
+  // Order by arrival like Feedly's "Latest" (Settings → General → Sort field).
+  3: { sortField: "created_at" },
 };
 
 export function applyForkDefaults(stored, defaults) {

@@ -36,3 +36,20 @@ test("the start page becomes Unread unless one was chosen", () => {
     "",
   );
 });
+
+test("lists order by arrival once, a later sort choice is kept", () => {
+  assert.equal(
+    applyForkDefaults(
+      { forkDefaults: 2, sortField: "published_at" },
+      settingsDefaults,
+    ).sortField,
+    "created_at",
+  );
+  assert.equal(
+    applyForkDefaults(
+      { forkDefaults: 3, sortField: "published_at" },
+      settingsDefaults,
+    ).sortField,
+    "published_at",
+  );
+});

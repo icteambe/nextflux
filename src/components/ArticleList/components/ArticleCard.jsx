@@ -39,6 +39,7 @@ export default function ArticleCard({ article }) {
     listLayout,
     listDensity,
     markAsReadOnScroll,
+    sortField,
     cardImageSize,
     showFavicon,
     showReadingTime,
@@ -111,10 +112,16 @@ export default function ArticleCard({ article }) {
       await handleMarkStatus(article);
     }
   };
+  const isActive = parseInt(articleId) === article.id;
   const handleClick = () => {
+    // Feedly collapses the open article when its title row is clicked again.
+    if (isActive && listLayout === "feedly") {
+      cursorArticleId.set(article.id);
+      navigate(window.location.pathname.split("/article/")[0] || "/");
+      return;
+    }
     handleArticleClick(article);
   };
-  const isActive = parseInt(articleId) === article.id;
   const isCursor = !isActive && $cursorArticleId === article.id;
   useEffect(() => {
     if (isCursor)
@@ -168,7 +175,10 @@ export default function ArticleCard({ article }) {
           <Star className="size-3 shrink-0 fill-current text-muted-foreground" />
         )}
         <span className="shrink-0 whitespace-nowrap text-xs text-muted-foreground">
-          {formatPublishDate(article.published_at)}
+          {/* The time column follows the sort field, so a list sorted by
+              arrival reads top-down like Feedly's; the header keeps the
+              published date. */}
+          {formatPublishDate(article[sortField] ?? article.published_at)}
         </span>
       </div>
       {isActive && (
